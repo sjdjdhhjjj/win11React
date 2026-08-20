@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - master # 如果你的主分支叫 main，请改成 main
+      - master
 
 jobs:
   build-and-deploy:
@@ -21,11 +21,10 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run build
+        run: npm run ghbuild
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-
