@@ -1,41 +1,30 @@
-name: Build-Deploy
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]   # 按你的触发分支修改
+    branches:
+      - master # 如果你的主分支叫 main，请改成 main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: 18   # 换成你用的版本
+          node-version: 18
 
-      - name: Install dependencies
-        run: npm ci          # 或 npm install
+      - name: Install Dependencies
+        run: npm install
 
-      - name: Build project
-        run: npm run build   # 换成你的构建命令
+      - name: Build
+        run: npm run build
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3   # 关键：从 v1 改为 v3
-        with:
-          path: ./build      # 换成你的实际输出目录（如 dist、public 等）
-
-  deploy:
-    needs: build
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4   # 已经升级到 v4
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist # Vite 打包后的输出目录
