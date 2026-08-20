@@ -1,30 +1,17 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import { VitePWA } from "vite-plugin-pwa";
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
 
-const config = ({ mode }) => {
-  return defineConfig({
-    plugins: [
-      react(),
-      VitePWA({
-        registerType: "autoUpdate",
-      }),
-    ],
-    base: "",
-    define: {
-      "process.env.NODE_ENV": `"${mode}"`,
-    },
-    build: {
-      outDir: "build",
-      rollupOptions: {
-        output: {
-          manualChunks: (id) => {
-            return "vendor";
-          },
-        },
-      },
-    },
-  });
-};
-
-export default config;
+export default defineConfig({
+  base: '/win11React/',
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      injectRegister: 'auto',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+      }
+    })
+  ]
+})
